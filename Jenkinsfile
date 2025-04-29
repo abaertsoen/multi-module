@@ -1,3 +1,6 @@
+def target_dc
+def target_dcs
+
 pipeline {
     agent none 
 
@@ -53,7 +56,7 @@ pipeline {
                     }
                     
                 }
-                 stage('Analyse Sonar') {
+                stage('Analyse Sonar') {
                     agent any
                      steps {
                         echo 'Analyse sonar'
@@ -72,6 +75,33 @@ pipeline {
                //ansiblePlaybook credentialsId: 'b81d130f-8cd3-49f5-9932-2d644f411b4c', disableHostKeyChecking: true, installation: 'ansible', inventory: '/home/plb/formation/workspace/ansible/inventory.list', playbook: '/home/plb/formation/workspace/ansible/run_script.yml', vaultTmpPath: ''
             }
         }  
+
+        stage('Déploiement via configuration') {
+            when {
+                branch 'master'
+                beforeInput true
+                beforeAgent true
+                beforeOptions true
+            }
+            agent any
+
+            steps {
+                target_deployments = readJSON file: 'deployment_vars.json', text: ''
+
+                echo "Déploiement via config"
+                echo "Deploying to ${target_dcs}"
+                script {
+                    for(i in target_deployments["dataCenters"]) { 
+                        println "Deploying to ${i}"
+                        sh 'mkdir -p ${target_deployments["integrationURL"]}/deployments/${i}'
+                        dir('${target_deployments["integrationURL"]}/${i}') {
+                            unstash 'generated_artefact'
+                        }
+                    }
+                }    
+                  
+            }
+        }
         
         stage('Déploiement validation') {
             when {
@@ -91,15 +121,12 @@ pipeline {
             }
 
             steps {
-                echo "Déploiement intégration"
-                echo "Deploying to ${env.TARGETDC}"
-                sh "mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}"
-                dir("/home/plb/formation/workspace/deployments/${env.TARGETDC}") {
-                    unstash 'generated_artefact'
+                script {
+                    target_dc = ${env.TARGETDC}
                 }
             }
         }
-/* 
+
         stage('Déploiement intégration') {
             when {
                 branch 'master'
@@ -111,13 +138,13 @@ pipeline {
 
             steps {
                 echo "Déploiement intégration"
-                echo "Deploying to ${env.TARGETDC}"
-                sh "mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}"
-                dir("/home/plb/formation/workspace/deployments/${env.TARGETDC}") {
+                echo "Deploying to ${target_dc}"
+                sh "mkdir -p /home/plb/formation/workspace/deployments/${target_dc}"
+                dir("/home/plb/formation/workspace/deployments/${target_dc}") {
                     unstash 'generated_artefact'
                 }
             }
-        }*/
+        }
 
         /* 
         stage('Déploiement via json file'){
