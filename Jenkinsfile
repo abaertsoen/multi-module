@@ -9,7 +9,6 @@ pipeline {
     environment {
         SONAR_TOKEN = credentials('sonar_token')
         MAILING_LIST = 'global.team.fake@bnpparibas.com'
-        stash_name = 'generated_artefact'
     }
 
     stages {
@@ -26,7 +25,7 @@ pipeline {
                 success {
                     // En cas de succès : Archiver les artefacts
                     archiveArtifacts 'application/**/*.jar'
-                    stash includes: 'application/**/*.jar', name: '${stash_name}'
+                    stash includes: 'application/**/*.jar', name: 'generated_artefact'
                 }
                 failure {
                     // En cas d’erreur : Envoyer un mail
@@ -63,10 +62,10 @@ pipeline {
                 input cancel: 'Annuler', message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', ok: 'Déployer', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc')]
                 sh 'mkdir -p /home/plb/formation/workspace/deployments/${target_dc}'
                 dir('/home/plb/formation/workspace/deployments/${target_dc}') {
-                    unstash '${stash_name}'
+                    unstash 'generated_artefact'
                 }
  
-                //sh 'cp ${stash_name} /home/plb/formation/workspace/deployments/${target_dc}'
+                //sh 'cp ${generated_artefact} /home/plb/formation/workspace/deployments/${target_dc}'
             }
         }
 
