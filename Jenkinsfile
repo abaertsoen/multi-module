@@ -46,6 +46,8 @@ pipeline {
             }
              
         }
+
+        /* 
         stage('Analyse qualité et vulnérabilités') {
             parallel {
                 stage('Vulnérabilités') {
@@ -75,7 +77,8 @@ pipeline {
                //ansiblePlaybook credentialsId: 'b81d130f-8cd3-49f5-9932-2d644f411b4c', disableHostKeyChecking: true, installation: 'ansible', inventory: '/home/plb/formation/workspace/ansible/inventory.list', playbook: '/home/plb/formation/workspace/ansible/run_script.yml', vaultTmpPath: ''
             }
         }  
-
+        */
+        
         stage('Déploiement via configuration') {
             when {
                 branch 'master'
