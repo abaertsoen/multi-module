@@ -69,7 +69,11 @@ pipeline {
         }  
         
         stage('Déploiement intégration') {
-            when { branch 'master' }
+            when {
+                branch 'master'
+                beforeInput true
+            }
+
             input {
                 message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
                 ok 'Déployer'
