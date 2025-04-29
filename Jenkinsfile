@@ -93,7 +93,7 @@ pipeline {
                     target_deployments = readJSON file: 'deployment_vars.json'
 
                     echo "Déploiement via config"
-                    echo "Deploying to ${target_dcs}"
+                    //echo "Deploying conf ${target_deployments}"
                 
                     for(i in target_deployments["dataCenters"]) { 
                         println "Deploying to ${i}"
