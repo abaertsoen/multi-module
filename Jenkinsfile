@@ -66,19 +66,19 @@ pipeline {
                 ok 'Déployer'
                 submitterParameter 'target_dc_approver'
                 parameters {
-                    choice choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc'
+                    choice choices: ['Paris', 'Lille', 'Lyon'], name: 'TARGETDC'
                 }
             }
             steps {
                 echo "Déploiement intégration"
                 
 
-                sh 'mkdir -p /home/plb/formation/workspace/deployments/${env.target_dc}'
-                dir('/home/plb/formation/workspace/deployments/${env.target_dc}') {
+                sh 'mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}'
+                dir('/home/plb/formation/workspace/deployments/${env.TARGETDC}') {
                     unstash 'generated_artefact'
                 }
  
-                //sh 'cp ${generated_artefact} /home/plb/formation/workspace/deployments/${target_dc}'
+                //sh 'cp ${generated_artefact} /home/plb/formation/workspace/deployments/${TARGETDC}'
             }
         }
 
