@@ -59,16 +59,17 @@ pipeline {
         
         stage('Déploiement intégration') {
             //when { branch 'master' }
+            input {
+                message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
+                ok 'Déployer'
+                submitterParameter 'target_dc_approver'
+                parameters {
+                    choice choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc'
+                }
+            }
             steps {
                 echo "Déploiement intégration"
-                input {
-                    message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
-                    ok 'Déployer'
-                    submitterParameter 'target_dc_approver'
-                    parameters {
-                        choice choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc'
-                    }
-                }
+                
 
                 sh 'mkdir -p /home/plb/formation/workspace/deployments/${env.target_dc}'
                 dir('/home/plb/formation/workspace/deployments/${env.target_dc}') {
