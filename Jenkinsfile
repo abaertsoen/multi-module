@@ -42,7 +42,7 @@ pipeline {
                     agent any
                     steps {
                         echo 'Tests de Vulnérabilités OWASP'
-                        //sh 'mvn -DskipTests verify'
+                        sh 'mvn -DskipTests verify'
                     }
                     
                 }
@@ -50,7 +50,7 @@ pipeline {
                     agent any
                      steps {
                         echo 'Analyse sonar'
-                        //sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
+                        sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
                      }
                     
                 }
@@ -60,7 +60,7 @@ pipeline {
             
         
         stage('Déploiement intégration') {
-            //when { branch 'master' }
+            when { branch 'master' }
             input {
                 message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
                 ok 'Déployer'
