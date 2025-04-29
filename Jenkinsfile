@@ -72,6 +72,8 @@ pipeline {
             when {
                 branch 'master'
                 beforeInput true
+                beforeAgent true
+                beforeOptions true
             }
 
             input {
