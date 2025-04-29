@@ -67,9 +67,6 @@ pipeline {
                             checkSonarQualityGate()
                         }    
                      }
-                    post {
-                    
-                    }
                 }
             }
             
