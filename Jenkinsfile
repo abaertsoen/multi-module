@@ -86,11 +86,12 @@ pipeline {
             agent any
 
             steps {
-                target_deployments = readJSON file: 'deployment_vars.json'
-
-                echo "Déploiement via config"
-                echo "Deploying to ${target_dcs}"
                 script {
+                    target_deployments = readJSON file: 'deployment_vars.json'
+
+                    echo "Déploiement via config"
+                    echo "Deploying to ${target_dcs}"
+                
                     for(i in target_deployments["dataCenters"]) { 
                         println "Deploying to ${i}"
                         sh 'mkdir -p ${target_deployments["integrationURL"]}/deployments/${i}'
