@@ -26,10 +26,10 @@ pipeline {
                     // En cas de succès : Archiver les artefacts
                     archiveArtifacts 'application/**/*.jar'
                     dir('application/target') {
-                        stash includes: 'application/**/*.jar', name: 'generated_artefact'
+                        stash includes: '*.jar', name: 'generated_artefact'
                     }
                 }
-                failure {
+                unsuccessful {
                     // En cas d’erreur : Envoyer un mail
                     mail bcc: '', body: 'GO TROUBLESHOOT IT', cc: '', from: '', replyTo: '', subject: '[ERROR] Jenkins pipeline failed', to: '${MAILING_LIST}'
                 }
