@@ -1,6 +1,11 @@
 pipeline {
     agent none 
 
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
+    }
+
     tools {
         maven "Maven_auto"
         jdk 'JDK21'
@@ -68,7 +73,7 @@ pipeline {
             }
         }  
         
-        stage('Déploiement intégration') {
+        stage('Déploiement validation') {
             when {
                 branch 'master'
                 beforeInput true
@@ -85,6 +90,23 @@ pipeline {
                 }
             }
 
+            steps {
+                echo "Déploiement intégration"
+                echo "Deploying to ${env.TARGETDC}"
+                sh "mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}"
+                dir("/home/plb/formation/workspace/deployments/${env.TARGETDC}") {
+                    unstash 'generated_artefact'
+                }
+            }
+        }
+/* 
+        stage('Déploiement intégration') {
+            when {
+                branch 'master'
+                beforeInput true
+                beforeAgent true
+                beforeOptions true
+            }
             agent any
 
             steps {
@@ -95,7 +117,7 @@ pipeline {
                     unstash 'generated_artefact'
                 }
             }
-        }
+        }*/
 
         /* 
         stage('Déploiement via json file'){
