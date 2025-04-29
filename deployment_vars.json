@@ -1,4 +1,4 @@
 {
-    "integrationURL": "/home/plb/formation/workspace/deployments/",
+    "integrationURL": "/home/plb/formation/workspace/deployments",
     "dataCenters": ["Nancy", "Strasbourg"]
 }

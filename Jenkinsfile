@@ -97,8 +97,8 @@ pipeline {
                 
                     for(i in target_deployments["dataCenters"]) { 
                         println "Deploying to ${i}"
-                        sh 'mkdir -p ${target_deployments["integrationURL"]}/deployments/${i}'
-                        dir('${target_deployments["integrationURL"]}/${i}') {
+                        sh "mkdir -p ${target_deployments['integrationURL']}/autos/${i}"
+                        dir("${target_deployments['integrationURL']}/${i}") {
                             unstash 'generated_artefact'
                         }
                     }
