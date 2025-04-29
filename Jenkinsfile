@@ -1,9 +1,10 @@
 pipeline {
-    agent any 
+    agent none 
 
     tools {
         maven "Maven_auto"
         jdk 'JDK21'
+        ansible 'ansible'
     }
 
     environment {
@@ -13,6 +14,7 @@ pipeline {
 
     stages {
         stage('Compile et tests') {
+            agent any
             steps {
                 echo 'Unit test et packaging'
                 sh 'mvn -Dmaven.test.failure.ignore=true clean package'
@@ -57,7 +59,11 @@ pipeline {
             }
             
         }
-            
+
+        stage('Ansible integration'){
+            agent any
+            ansiblePlaybook credentialsId: 'b81d130f-8cd3-49f5-9932-2d644f411b4c', disableHostKeyChecking: true, installation: 'ansible', inventory: '/home/plb/formation/workspace/ansible/inventory.list', playbook: '/home/plb/formation/workspace/ansible/run_script.yml', vaultTmpPath: ''
+        }  
         
         stage('Déploiement intégration') {
             when { branch 'master' }
@@ -70,6 +76,8 @@ pipeline {
                 }
             }
 
+            agent any
+
             steps {
                 echo "Déploiement intégration"
                 echo "Deploying to ${env.TARGETDC}"
@@ -80,7 +88,11 @@ pipeline {
             }
         }
 
-        
+        /* 
+        stage('Déploiement via json file'){
+            readJSON file: '/data', text: ''
+        }
+        */
 
      }
     
