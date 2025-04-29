@@ -25,7 +25,9 @@ pipeline {
                 success {
                     // En cas de succès : Archiver les artefacts
                     archiveArtifacts 'application/**/*.jar'
-                    stash includes: 'application/**/*.jar', name: 'generated_artefact'
+                    dir('application/target') {
+                        stash includes: 'application/**/*.jar', name: 'generated_artefact'
+                    }
                 }
                 failure {
                     // En cas d’erreur : Envoyer un mail
@@ -59,9 +61,17 @@ pipeline {
             //when { branch 'master' }
             steps {
                 echo "Déploiement intégration"
-                input cancel: 'Annuler', message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', ok: 'Déployer', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc')]
-                sh 'mkdir -p /home/plb/formation/workspace/deployments/${target_dc}'
-                dir('/home/plb/formation/workspace/deployments/${target_dc}') {
+                input {
+                    message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
+                    ok 'Déployer'
+                    submitterParameter 'target_dc_approver'
+                    parameters {
+                        choice choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc'
+                    }
+                }
+
+                sh 'mkdir -p /home/plb/formation/workspace/deployments/${env.target_dc}'
+                dir('/home/plb/formation/workspace/deployments/${env.target_dc}') {
                     unstash 'generated_artefact'
                 }
  
