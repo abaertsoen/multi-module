@@ -69,14 +69,16 @@ pipeline {
                     choice choices: ['Paris', 'Lille', 'Lyon'], name: 'TARGETDC'
                 }
             }
+
             steps {
                 echo "Déploiement intégration"
                 
-
-                sh 'mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}'
-                dir('/home/plb/formation/workspace/deployments/${env.TARGETDC}') {
-                    unstash 'generated_artefact'
-                }
+                withEnv(['target_dc=${env.TARGETDC}']) {
+                    sh 'mkdir -p /home/plb/formation/workspace/deployments/${target_dc}'
+                    dir('/home/plb/formation/workspace/deployments/${target_dc}') {
+                        unstash 'generated_artefact'
+                    }
+                } 
  
                 //sh 'cp ${generated_artefact} /home/plb/formation/workspace/deployments/${TARGETDC}'
             }
