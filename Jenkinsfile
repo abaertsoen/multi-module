@@ -86,7 +86,7 @@ pipeline {
             agent any
 
             steps {
-                target_deployments = readJSON file: 'deployment_vars.json', text: ''
+                target_deployments = readJSON file: 'deployment_vars.json'
 
                 echo "Déploiement via config"
                 echo "Deploying to ${target_dcs}"
