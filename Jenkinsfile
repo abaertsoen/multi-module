@@ -72,13 +72,11 @@ pipeline {
 
             steps {
                 echo "Déploiement intégration"
-                
-                withEnv(['target_dc=${env.TARGETDC}']) {
-                    sh "mkdir -p /home/plb/formation/workspace/deployments/${target_dc}"
-                    dir("/home/plb/formation/workspace/deployments/${target_dc}") {
-                        unstash 'generated_artefact'
-                    }
-                } 
+                echo "Deploying to ${env.TARGETDC}"
+                sh "mkdir -p /home/plb/formation/workspace/deployments/${env.TARGETDC}"
+                dir("/home/plb/formation/workspace/deployments/${env.TARGETDC}") {
+                    unstash 'generated_artefact'
+                }
             }
         }
 
