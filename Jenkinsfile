@@ -1,5 +1,5 @@
 def target_dc
-def target_dcs
+def target_deployments
 
 pipeline {
     agent none 
