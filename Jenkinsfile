@@ -54,9 +54,9 @@ pipeline {
             
         }
             
-        when { branch 'master' }
+        
         stage('Déploiement intégration') {
-
+            when { branch 'master' }
             steps {
                 echo "Déploiement intégration"
                 input cancel: 'Annuler', message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', ok: 'Déployer', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], name: 'target_dc')]
