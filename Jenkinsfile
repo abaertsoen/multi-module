@@ -99,7 +99,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build('firstdockerfile/multi-module', '.')
-                    docker.withRegistry('https://registry.hub.docker.com' 'docker_hub') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub') {
                         dockerImage.push "${env.BRANCH_NAME}"
                     }
                 }
