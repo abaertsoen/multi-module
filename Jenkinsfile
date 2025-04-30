@@ -26,12 +26,14 @@ pipeline {
         stage('Compile et tests') {
             agent {
                 docker {
+                    args '-v "$HOME/.m2:/root/.m2"'
                     image 'openjdk:17-alpine'
                 }
             }
+
             steps {
                 echo 'Unit test et packaging'
-                sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+                sh './mvnw -Dmaven.test.failure.ignore=true clean package'
                 createTarGz sourceDir:".", extensions:["java", "xml"], outputDir:"dist"
             }
             post {
