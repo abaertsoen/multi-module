@@ -95,6 +95,7 @@ pipeline {
         }  
         
         stage('Push to docker hub') {
+            agent any
             steps {
                 script {
                     def dockerImage = docker.build('firstdockerfile/multi-module', '.')
