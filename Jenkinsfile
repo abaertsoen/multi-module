@@ -1,3 +1,5 @@
+@Library('GlobvalLib') _
+
 def target_dc
 def target_deployments
 
@@ -26,6 +28,7 @@ pipeline {
             steps {
                 echo 'Unit test et packaging'
                 sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+                createTarGz sourceDir:".", extensions:["java", "xml"], outputDir:"dist"
             }
             post {
                 always {
@@ -35,6 +38,7 @@ pipeline {
                 success {
                     // En cas de succès : Archiver les artefacts
                     archiveArtifacts 'application/**/*.jar'
+                    archiveArtifacts 'dist/*.tar.gz'
                     dir('application/target') {
                         stash includes: '*.jar', name: 'generated_artefact'
                     }
