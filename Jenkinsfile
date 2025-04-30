@@ -96,9 +96,11 @@ pipeline {
         
         stage('Push to docker hub') {
             steps {
-                def dockerImage = docker.build('firstdockerfile/multi-module', '.')
-                withDockerRegistry(credentialsId: 'docker_hub', url: 'https://hub.docker.com/') {
-                    dockerImage.push 'latest'
+                script {
+                    def dockerImage = docker.build('firstdockerfile/multi-module', '.')
+                    withDockerRegistry(credentialsId: 'docker_hub', url: 'https://hub.docker.com/') {
+                        dockerImage.push 'latest'
+                    }
                 }
             }
         }
