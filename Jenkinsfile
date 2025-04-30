@@ -7,7 +7,6 @@ pipeline {
     }
 
     environment {
-        SONAR_TOKEN = credentials('sonar_token')
         MAILING_LIST = 'global.team.fake@bnpparibas.com'
     }
 
