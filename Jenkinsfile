@@ -11,12 +11,6 @@ pipeline {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
     }
 
-    tools {
-        maven "Maven_auto"
-        jdk 'JDK21'
-        ansible 'ansible'
-    }
-
     environment {
         SONAR_TOKEN = credentials('sonar_token')
         MAILING_LIST = 'global.team.fake@bnpparibas.com'
@@ -26,7 +20,7 @@ pipeline {
         stage('Compile et tests') {
             agent {
                 docker {
-                    args '-v "$HOME/.m2:/root/.m2"'
+                    args '-v $HOME/.m2:/root/.m2'
                     image 'openjdk:17-alpine'
                 }
             }
@@ -57,6 +51,11 @@ pipeline {
              
         }
 
+        tools {
+            maven "Maven_auto"
+            jdk 'JDK21'
+            ansible 'ansible'
+        }
         
         stage('Analyse qualité et vulnérabilités') {
             parallel {
