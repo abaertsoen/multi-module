@@ -24,7 +24,11 @@ pipeline {
 
     stages {
         stage('Compile et tests') {
-            agent any
+            agent {
+                docker {
+                    image 'openjdk:17-alpine'
+                }
+            }
             steps {
                 echo 'Unit test et packaging'
                 sh 'mvn -Dmaven.test.failure.ignore=true clean package'
