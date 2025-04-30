@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo 'Unit test et packaging'
                 sh './mvnw -Dmaven.test.failure.ignore=true clean package'
-                createTarGz sourceDir:"application/target", extensions:["java", "xml"], outputDir:"dist"
+                createTarGz sourceDir:"application/target", extensions:["jar", "xml"], outputDir:"dist"
             }
             post {
                 always {
@@ -99,7 +99,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build('firstdockerfile/multi-module', '.')
-                    docker.withRegistry(credentialsId: 'docker_hub', url: 'https://registry.hub.docker.com') {
+                    docker.withRegistry('https://registry.hub.docker.com' 'docker_hub') {
                         dockerImage.push "${env.BRANCH_NAME}"
                     }
                 }
