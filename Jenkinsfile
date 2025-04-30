@@ -50,14 +50,13 @@ pipeline {
             }
              
         }
-
-        tools {
-            maven "Maven_auto"
-            jdk 'JDK21'
-            ansible 'ansible'
-        }
         
         stage('Analyse qualité et vulnérabilités') {
+            tools {
+                maven "Maven_auto"
+                jdk 'JDK21'
+            }
+
             parallel {
                 stage('Vulnérabilités') {
                     agent any
@@ -82,6 +81,9 @@ pipeline {
         }
 
         stage('Ansible integration'){
+            tools {
+                ansible 'ansible'
+            }
             agent any
             steps {
                 ansibleAdhoc(credentialsId: 'b81d130f-8cd3-49f5-9932-2d644f411b4c', inventory: '/home/plb/formation/workspace/ansible/inventory.list', hosts: 'slaves', module: 'shell', moduleArguments: 'df -Th')
@@ -89,6 +91,14 @@ pipeline {
             }
         }  
         
+        stage('Push to docker hub') {
+            steps {
+                def dockerImage = docker.build('firstdockerfile/multi-module', '.')
+                withDockerRegistry(credentialsId: 'docker_hub', url: 'https://hub.docker.com/') {
+                    dockerImage.push 'latest'
+                }
+            }
+        }
 
         stage('Déploiement via configuration') {
             /*when {
