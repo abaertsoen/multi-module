@@ -98,6 +98,7 @@ pipeline {
             agent any
             steps {
                 script {
+                    unstash 'generated_artefact'
                     def dockerImage = docker.build('firstdockerfile/multi-module', '.')
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub') {
                         dockerImage.push "${env.BRANCH_NAME}"
