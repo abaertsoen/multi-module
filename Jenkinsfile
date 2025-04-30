@@ -1,4 +1,4 @@
-@Library('GlobvalLib') _
+@Library('GlobalLib') _
 
 def target_dc
 def target_deployments
