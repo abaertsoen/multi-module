@@ -52,13 +52,12 @@ pipeline {
         }
         
         stage('Analyse qualité et vulnérabilités') {
-            tools {
-                maven "Maven_auto"
-                jdk 'JDK21'
-            }
-
             parallel {
                 stage('Vulnérabilités') {
+                    tools {
+                        maven "Maven_auto"
+                        jdk 'JDK21'
+                    }
                     agent any
                     steps {
                         echo 'Tests de Vulnérabilités OWASP'
@@ -67,6 +66,10 @@ pipeline {
                     
                 }
                 stage('Analyse Sonar') {
+                    tools {
+                        maven "Maven_auto"
+                        jdk 'JDK21'
+                    }
                     agent any
                      steps {
                         echo 'Analyse sonar'
