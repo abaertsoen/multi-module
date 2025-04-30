@@ -15,7 +15,8 @@ pipeline {
             agent {
                 kubernetes {
                     cloud 'KubLocal'
-                    inheritFrom 'jdk17-agent'
+                    //inheritFrom 'jdk17-agent'
+                    yamlFile 'kubernetesPod.yml'
                 }
             }
 
