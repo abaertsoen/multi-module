@@ -21,8 +21,10 @@ pipeline {
             }
 
             steps {
-                echo 'Unit test et packaging'
-                sh './mvnw -Dmaven.test.failure.ignore=true clean package'
+                container('openjdk-17') {
+                    echo 'Unit test et packaging'
+                    sh './mvnw -Dmaven.test.failure.ignore=true clean package'
+                }
             }
 
             post {
@@ -33,10 +35,6 @@ pipeline {
                 success {
                     // En cas de succès : Archiver les artefacts
                     archiveArtifacts 'application/**/*.jar'
-                    archiveArtifacts 'dist/*.tar.gz'
-                    dir('application/target') {
-                        stash includes: '*.jar', name: 'generated_artefact'
-                    }
                 }
                 unsuccessful {
                     // En cas d’erreur : Envoyer un mail
